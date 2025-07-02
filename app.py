@@ -65,6 +65,9 @@ if st.button("Analyze Fit"):
             prompt = f"""
 You are an expert resume and job matching analyst with deep experience in evaluating candidate-job fit. Your task is to provide a comprehensive analysis of how well the candidate's resume matches the job requirements.
 
+CANDIDATE'S RESUME:
+{resume_text}
+
 JOB POSTING TO ANALYZE:
 {job_text}
 
@@ -81,7 +84,7 @@ ANALYSIS INSTRUCTIONS:
    - Compare each requirement against the resume content WORD FOR WORD
    - For each skill: state if it's present, partially present, or missing
    - ONLY mark as "Present" if the exact skill or very close synonym is mentioned
-   - If the skill is not explicitly stated, mark as "Missing" regardless of related experience
+   - If the skill is not explicitly stated, mark it as "Missing" regardless of related experience
 
 2. **EXPERIENCE RELEVANCE**:
    - Evaluate if the candidate's work experience directly relates to the job requirements
@@ -138,6 +141,7 @@ FORMAT YOUR RESPONSE AS:
 
 REMEMBER: If you cannot find explicit evidence of a skill in the resume, mark it as "Missing." Do not assume that general technical skills qualify for specialized domain expertise. Be conservative in your assessment - accuracy is more important than being encouraging.
 """
-            answer = qa_chain.run(prompt)
+            # Use the LLM directly instead of the retrieval chain
+            answer = llm.predict(prompt)
             st.subheader("✅ AI Analysis")
             st.write(answer)

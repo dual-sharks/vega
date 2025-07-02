@@ -68,22 +68,30 @@ You are an expert resume and job matching analyst with deep experience in evalua
 JOB POSTING TO ANALYZE:
 {job_text}
 
+CRITICAL INSTRUCTIONS - READ CAREFULLY:
+- Be EXTREMELY strict when evaluating skills. Only mark a skill as "Present" if it is EXPLICITLY mentioned in the resume.
+- Do NOT infer skills from related experience. If the resume doesn't specifically mention a skill, mark it as "Missing."
+- Do NOT assume that general data science skills automatically qualify for specialized biological/medical skills.
+- If you're unsure whether a skill is present, mark it as "Missing" - it's better to be conservative.
+
 ANALYSIS INSTRUCTIONS:
 
-1. **SKILL MATCH ANALYSIS** (Be very specific):
+1. **SKILL MATCH ANALYSIS** (Be extremely strict):
    - Extract key required skills/qualifications from the job posting
-   - Compare each requirement against the resume content
+   - Compare each requirement against the resume content WORD FOR WORD
    - For each skill: state if it's present, partially present, or missing
-   - Be strict - only count skills that are clearly demonstrated in the resume
+   - ONLY mark as "Present" if the exact skill or very close synonym is mentioned
+   - If the skill is not explicitly stated, mark as "Missing" regardless of related experience
 
 2. **EXPERIENCE RELEVANCE**:
    - Evaluate if the candidate's work experience directly relates to the job requirements
-   - Consider industry relevance, role similarity, and project scope
-   - Distinguish between "related" and "directly relevant" experience
+   - Be honest about whether experience is "related" vs "directly relevant"
+   - Distinguish between general technical skills and domain-specific expertise
 
 3. **EDUCATION & CERTIFICATIONS**:
    - Check if required degrees/certifications are present
    - Evaluate if the field of study is relevant to the job requirements
+   - Be strict - a Computer Science degree is NOT equivalent to Bioinformatics
 
 4. **CONFIDENCE RATING CRITERIA** (0-100 scale):
    - 0-20: No relevant skills or experience, completely different field
@@ -108,7 +116,7 @@ ANALYSIS INSTRUCTIONS:
 
 FORMAT YOUR RESPONSE AS:
 **SKILL MATCH ANALYSIS:**
-[List each requirement and match status]
+[List each requirement and match status - be very specific about what you found or didn't find]
 
 **EXPERIENCE RELEVANCE:**
 [Detailed assessment]
@@ -128,7 +136,7 @@ FORMAT YOUR RESPONSE AS:
 **RECOMMENDATION:**
 [Clear yes/no/maybe with reasoning]
 
-Be honest and objective. If the candidate is clearly not qualified, say so clearly and explain why. Don't inflate ratings to be encouraging - accuracy is more valuable than optimism.
+REMEMBER: If you cannot find explicit evidence of a skill in the resume, mark it as "Missing." Do not assume that general technical skills qualify for specialized domain expertise. Be conservative in your assessment - accuracy is more important than being encouraging.
 """
             answer = qa_chain.run(prompt)
             st.subheader("✅ AI Analysis")

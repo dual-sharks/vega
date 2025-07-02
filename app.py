@@ -37,9 +37,9 @@ embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
 # Chroma store
 vectordb = Chroma.from_documents(
     docs,
-    embedding=embeddings,
-    persist_directory="resume_chroma"
+    embedding=embeddings
 )
+
 
 retriever = vectordb.as_retriever(search_kwargs={"k": 4})
 

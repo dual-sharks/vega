@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Kerim Tricic <kerim.tricic@dualsharks.com>"]
 readme = "README.md"
-
+package-mode = false
 [tool.poetry.dependencies]
 python = "^3.12"
 streamlit = "^1.46.1"

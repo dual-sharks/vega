@@ -1,0 +1,23 @@
+Analyze this government contract opportunity for AI/LLM/Generative AI relevance:
+
+TITLE: {title}
+DESCRIPTION: {description}
+
+Determine if this opportunity specifically requests or mentions:
+1. Artificial Intelligence (AI)
+2. Large Language Models (LLMs)
+3. Generative AI tools
+4. Machine Learning
+5. Natural Language Processing
+6. AI/ML development or implementation
+
+Respond with a JSON object:
+{{
+    "is_ai_related": true/false,
+    "ai_technologies": ["list", "of", "specific", "ai", "technologies"],
+    "relevance_score": 0-100,
+    "summary": "brief explanation of AI relevance",
+    "recommendation": "apply/consider/pass"
+}}
+
+Only mark as AI-related if there are explicit mentions or clear requirements for AI technologies. 

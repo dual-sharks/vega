@@ -7,6 +7,7 @@ from langchain.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
+from trading_dashboard import render_trading_dashboard
 
 # Load environment variables
 load_dotenv()
@@ -27,6 +28,8 @@ df = pd.read_csv(resume_file)
 
 # Convert CSV to a string blob for embedding
 resume_text = ""
+
+# Add project-specific content
 for index, row in df.iterrows():
     resume_text += f"""
 Company: {row.get('Company', '')}
@@ -61,17 +64,20 @@ qa_chain = RetrievalQA.from_chain_type(
     chain_type="stuff"
 )
 
-# Streamlit UI
-st.markdown("Paste an **Upwork job description** below, and I will analyze how well it matches your resume:")
+# Add tabs for different sections
+tab1, tab2 = st.tabs(["📋 Job Analysis", "📊 Trading Dashboard"])
 
-job_text = st.text_area("Job description", height=300)
+with tab1:
+    st.markdown("Paste an **Upwork job description** below, and I will analyze how well it matches your resume:")
 
-if st.button("Analyze Fit"):
-    if not job_text.strip():
-        st.warning("Please paste a job description before clicking Analyze.")
-    else:
-        with st.spinner("Analyzing..."):
-            prompt = f"""
+    job_text = st.text_area("Job description", height=300)
+
+    if st.button("Analyze Fit"):
+        if not job_text.strip():
+            st.warning("Please paste a job description before clicking Analyze.")
+        else:
+            with st.spinner("Analyzing..."):
+                prompt = f"""
 You are an expert resume and job matching analyst with deep experience in evaluating candidate-job fit. Your task is to provide a comprehensive analysis of how well the candidate's resume matches the job requirements.
 
 CANDIDATE'S RESUME:
@@ -155,14 +161,13 @@ From the candidate's projects, extract these implied skills:
 
 ANALYSIS INSTRUCTIONS:
 
-1. **SKILL MATCH ANALYSIS** (Be reasonable but accurate):
+1. **SKILL MATCH ANALYSIS** (Check CORE TECHNICAL SKILLS first):
    - Extract key required skills/qualifications from the job posting
-   - Compare each requirement against the resume content
-   - For each skill: state if it's present, partially present, or missing
+   - For each skill requirement, FIRST check the "CORE TECHNICAL SKILLS" section
+   - If found in CORE TECHNICAL SKILLS, mark as "Present"
+   - If not in CORE TECHNICAL SKILLS, then check project descriptions
+   - Only mark as "Missing" if not found in either place
    - Consider related experience and transferable skills
-   - Look for equivalent technologies and methodologies
-   - Be reasonable about skill variations (e.g., experience with ChatGPT/LangChain counts for GPT-4 experience)
-   - Consider implied skills based on project types and technologies used
 
 2. **EXPERIENCE RELEVANCE**:
    - Evaluate if the candidate's work experience directly relates to the job requirements
@@ -200,7 +205,7 @@ ANALYSIS INSTRUCTIONS:
 
 FORMAT YOUR RESPONSE AS:
 **SKILL MATCH ANALYSIS:**
-[List each requirement and match status - consider skill equivalencies and implied skills]
+[List each requirement and match status - check CORE TECHNICAL SKILLS first]
 
 **EXPERIENCE RELEVANCE:**
 [Detailed assessment]
@@ -220,13 +225,11 @@ FORMAT YOUR RESPONSE AS:
 **RECOMMENDATION:**
 [Clear yes/no/maybe with reasoning]
 
-GUIDELINES:
-- Be reasonable about skill equivalencies (e.g., LangChain experience = LLM experience)
-- Consider the candidate's demonstrated ability to learn and adapt
-- Recognize when experience in similar domains is highly transferable
-- Be honest but fair in your assessment
-- Consider implied skills based on project context and technologies used
+REMEMBER: The CORE TECHNICAL SKILLS section at the top of the resume contains fundamental skills the candidate possesses. Check this section FIRST for any skill evaluation.
 """
-            answer = llm.predict(prompt)
-            st.subheader("✅ AI Analysis")
-            st.write(answer)
+                answer = llm.predict(prompt)
+                st.subheader("✅ AI Analysis")
+                st.write(answer)
+
+with tab2:
+    render_trading_dashboard()
